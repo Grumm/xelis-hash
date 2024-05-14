@@ -6,6 +6,7 @@ use std::{ptr::read_unaligned, simd::{cmp::SimdPartialEq, num::SimdUint, u32x16}
 use aes::cipher::generic_array::GenericArray;
 use thiserror::Error as ThisError;
 use tiny_keccak::keccakp;
+use std::slice;
 
 // These are tweakable parameters
 pub const MEMORY_SIZE: usize = 32768;
@@ -291,6 +292,17 @@ pub fn xelis_hash(input: &mut [u8; BYTES_ARRAY_INPUT], scratch_pad: &mut Scratch
     }
 
     Ok(final_result)
+}
+
+#[no_mangle]
+pub extern "C" fn xelis_hash_cpu(input_ptr: *mut u8, input_len: usize, scratch_pad_ptr: *mut u64) -> Hash{
+    assert!(input_len >= BYTES_ARRAY_INPUT, "Input buffer is too smal");
+    let input = unsafe { &mut *(input_ptr as *mut [u8; BYTES_ARRAY_INPUT]) };
+    let scratch_pad = unsafe { &mut *(scratch_pad_ptr as *mut ScratchPad) };
+
+    let res = xelis_hash(input, scratch_pad);
+
+    res.unwrap()
 }
 
 #[cfg(test)]

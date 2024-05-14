@@ -181,6 +181,7 @@ version = "0.1.0"
 dependencies = [
  "aes",
  "bytemuck",
+ "libc",
  "thiserror",
  "tiny-keccak",
 ]

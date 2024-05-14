@@ -10,6 +10,12 @@ aes = { version = "0.8.3", features = ["hazmat"] }
 bytemuck = { version = "1.15.0", features = ["derive"] }
 thiserror = "1.0.58"
 tiny-keccak = { version = "2.0", features = ["k12"] }
+libc = "0.2"   
+
+[lib]
+name = "helishash"
+
+crate-type = ["staticlib", "cdylib"]  # 'staticlib' for static, 'cdylib' for dynamic
 
 [profile.dev]
 opt-level = 3
